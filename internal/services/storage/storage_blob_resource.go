@@ -182,9 +182,10 @@ func resourceStorageBlobCreate(d *pluginsdk.ResourceData, meta interface{}) erro
 
 	accountName := d.Get("storage_account_name").(string)
 	containerName := d.Get("storage_container_name").(string)
+	resourceGroupName := d.Get("resource_group_name").(string)
 	name := d.Get("name").(string)
 
-	account, err := storageClient.FindAccount(ctx, subscriptionId, accountName)
+	account, err := storageClient.FindAccount2(ctx, commonids.StorageAccountId{SubscriptionId: subscriptionId, ResourceGroupName: resourceGroupName, StorageAccountName: accountName})
 	if err != nil {
 		return fmt.Errorf("retrieving Storage Account %q for Blob %q (Container %q): %v", accountName, name, containerName, err)
 	}

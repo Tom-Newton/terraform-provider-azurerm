@@ -1455,7 +1455,7 @@ func resourceStorageAccountCreate(d *pluginsdk.ResourceData, meta interface{}) e
 		return fmt.Errorf("populating cache for %s: %+v", id, err)
 	}
 
-	dataPlaneAccount, err := storageClient.FindAccount(ctx, id.SubscriptionId, id.StorageAccountName)
+	dataPlaneAccount, err := storageClient.FindAccount2(ctx, id)
 	if err != nil {
 		return fmt.Errorf("retrieving %s: %+v", id, err)
 	}
@@ -1868,7 +1868,7 @@ func resourceStorageAccountUpdate(d *pluginsdk.ResourceData, meta interface{}) e
 			return fmt.Errorf("`queue_properties` aren't supported for account kind %q in sku tier %q", accountKind, accountTier)
 		}
 
-		account, err := storageClient.FindAccount(ctx, id.SubscriptionId, id.StorageAccountName)
+		account, err := storageClient.FindAccount2(ctx, *id)
 		if err != nil {
 			return fmt.Errorf("retrieving %s: %+v", *id, err)
 		}
@@ -1919,7 +1919,7 @@ func resourceStorageAccountUpdate(d *pluginsdk.ResourceData, meta interface{}) e
 			return fmt.Errorf("`static_website` aren't supported for account kind %q in sku tier %q", accountKind, accountTier)
 		}
 
-		account, err := storageClient.FindAccount(ctx, id.SubscriptionId, id.StorageAccountName)
+		account, err := storageClient.FindAccount2(ctx, *id)
 		if err != nil {
 			return fmt.Errorf("retrieving %s: %+v", *id, err)
 		}
@@ -1970,7 +1970,7 @@ func resourceStorageAccountRead(d *pluginsdk.ResourceData, meta interface{}) err
 	}
 
 	// we then need to find the storage account
-	account, err := storageClient.FindAccount(ctx, id.SubscriptionId, id.StorageAccountName)
+	account, err := storageClient.FindAccount2(ctx, *id)
 	if err != nil {
 		return fmt.Errorf("retrieving %s: %+v", *id, err)
 	}

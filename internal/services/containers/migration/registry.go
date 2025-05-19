@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/hashicorp/go-azure-helpers/resourcemanager/commonids"
 	"github.com/hashicorp/terraform-provider-azurerm/internal/clients"
 	"github.com/hashicorp/terraform-provider-azurerm/internal/tf/pluginsdk"
 )
@@ -50,8 +51,9 @@ func (RegistryV1ToV2) UpgradeFunc() pluginsdk.StateUpgraderFunc {
 			raw := v.(*pluginsdk.Set).List()
 			rawVals := raw[0].(map[string]interface{})
 			storageAccountName := rawVals["name"].(string)
+			resourceGroupName := rawVals["resource_group_name"].(string)
 
-			account, err := meta.(*clients.Client).Storage.FindAccount(ctx, subscriptionId, storageAccountName)
+			account, err := meta.(*clients.Client).Storage.FindAccount2(ctx, commonids.StorageAccountId{SubscriptionId: subscriptionId, ResourceGroupName: resourceGroupName, StorageAccountName: storageAccountName})
 			if err != nil {
 				return nil, fmt.Errorf("finding Storage Account %q: %+v", storageAccountName, err)
 			}
