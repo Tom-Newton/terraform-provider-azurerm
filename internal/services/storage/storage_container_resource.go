@@ -247,6 +247,7 @@ func resourceStorageContainerUpdate(d *pluginsdk.ResourceData, meta interface{})
 
 func resourceStorageContainerRead(d *pluginsdk.ResourceData, meta interface{}) error {
 	storageClient := meta.(*clients.Client).Storage
+	subscriptionId := meta.(*clients.Client).Account.SubscriptionId
 	ctx, cancel := timeouts.ForRead(meta.(*clients.Client).StopContext, d)
 	defer cancel()
 
@@ -255,12 +256,7 @@ func resourceStorageContainerRead(d *pluginsdk.ResourceData, meta interface{}) e
 		return err
 	}
 
-	accountId, err := commonids.ParseStorageAccountID(d.Id())
-	if err != nil {
-		return err
-	}
-
-	account, err := storageClient.FindAccount2(ctx, *accountId)
+	account, err := storageClient.FindAccount(ctx, subscriptionId, id.AccountId.AccountName)
 	if err != nil {
 		return fmt.Errorf("retrieving Account %q for Container %q: %v", id.AccountId.AccountName, id.ContainerName, err)
 	}
